@@ -194,8 +194,29 @@ class FileFormatter{
         cursor = 0; //reset cursor
         while(cursor < content.length()){
             if(content.charAt(cursor) == '('){
+                //First delete leading spaces
                 while(Character.isWhitespace(content.charAt(cursor - 1))){
                     removeBehindCursor();
+                    cursor--;
+                }
+
+                cursor++; //get off of the parenthesis
+
+                //Next, move foward until a non-space character is reached.
+                while(Character.isWhitespace(content.charAt(cursor))){
+                    cursor++;
+                }
+
+                //Repeat step 1
+                while(Character.isWhitespace(content.charAt(cursor - 1))){
+                    removeBehindCursor();
+                    cursor--;
+                }
+            } else if(content.charAt(cursor) == ')'){
+                //make the last character touch the closing paranthesis
+                while(Character.isWhitespace(content.charAt(cursor - 1))){
+                    removeBehindCursor();
+                    cursor--;
                 }
             }
             cursor++; //onward

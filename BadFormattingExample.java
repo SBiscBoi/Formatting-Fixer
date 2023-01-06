@@ -21,7 +21,7 @@ public class BadFormattingExample
     }
       
     // write out the sum
-    System.out.println(  "The sum is: " + sum )  ;
+    System.out.println  (  "The sum is: " + sum )  ;
 
   }
 }      
