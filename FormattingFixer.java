@@ -3,13 +3,13 @@ OBJECTIVE: Take in an annoyingly formatted .java file, and fix it to my personal
 GOOD FORMATTING RULES:
     DONE 1: Semicolons should touch the end of a statement.  (Good ex. int x = 1;) (Bad ex. int x = 1 ;)
     DONE 2: Beginning Curly Braces should touch the end of the previous statement.  (Good ex. while(x > 1){ ) (Bad ex. while(x > 1) \n { )
-    3: Beginning paranthesis should touch the end of the previous statement.  (Good ex. if(x > 1) ) (Bad ex. if (x > 1) )
-    4: The first character inside paranthesis should be touching the first parenthesis.  (Good ex. (x > 1) ) (Bad ex. ( x > 1 ) )
-    5: The last character inside paranthesis should be touching the last parenthesis.  (Good ex. (x > 1) ) (Bad ex. ( x > 1 ) )
-    6: Every line within a set of Curly braces should be 1 tab ahead, with the closing brace being one tab behind and on it's own seperate line 1 below.  (no example needed)
-    7: Only one space before and after '=' (no example needed)
-    8: If curly braces are used to define array elements, then don't put the closing brace on a newline
-    9: A proper tab is 4 spaces long.
+    DONE 3: Beginning paranthesis should touch the end of the previous statement.  (Good ex. if(x > 1) ) (Bad ex. if (x > 1) )
+    DONE 4: The first character inside paranthesis should be touching the first parenthesis.  (Good ex. (x > 1) ) (Bad ex. ( x > 1 ) )
+    DONE 5: The last character inside paranthesis should be touching the last parenthesis.  (Good ex. (x > 1) ) (Bad ex. ( x > 1 ) )
+    DONE 6: Every line within a set of Curly braces should be 1 tab ahead, with the closing brace being one tab behind and on it's own seperate line 1 below.  (no example needed)
+    DONE 7: Only one space before and after '=' (no example needed)
+    DONE 8: If curly braces are used to define array elements, then don't put the closing brace on a newline
+    DONE 9: A proper tab is 4 spaces long.
 */
 
 import java.io.FileReader;
@@ -20,7 +20,7 @@ public class FormattingFixer{
     public static void main(String[] args){
         FileFormatter formatter = new FileFormatter("BadFormattingExample.java");
         
-        formatter.formatFull(); //preform a full format
+        formatter.format(); //preform a full format
 
         System.out.println(formatter.getCurrentContent());
         //formatter.printWhitespace();
@@ -53,15 +53,16 @@ class FileFormatter{
     public String getCurrentContent() { return content; } //Return the current content of the file being formatted
 
     //preform a full format of the file, calling all formatting method
-    public void formatFull(){
+    public void format(){
         formatSemicolons();
         formatCurlyBraces();
         formatParenthesis();
+        formatAssignments();
     }
 
     //fix semicolon formatting
     //made public to give the option of only formatting semicolons
-    public void formatSemicolons(){
+    private void formatSemicolons(){
         cursor = 0; //reset cursor
         while(cursor < content.length()){ //run through whole file
             if(content.charAt(cursor) == ';'){ //if semicolon found...
@@ -76,7 +77,7 @@ class FileFormatter{
 
     //fix curly brace formatting
     //made public to give the option of only formatting curly braces
-    public void formatCurlyBraces(){
+    private void formatCurlyBraces(){
         byte tabCount = 0; //keep track of how many tabs are needed for everything before the closing braces
 
         //First, fix opening braces
@@ -189,7 +190,7 @@ class FileFormatter{
         content = tempContent;
     }
     
-    public void formatParenthesis(){
+    private void formatParenthesis(){
         //First, align opening parenthesis with the last non-whitespace character
         cursor = 0; //reset cursor
         while(cursor < content.length()){
@@ -220,6 +221,45 @@ class FileFormatter{
                 }
             }
             cursor++; //onward
+        }
+    }
+
+    private void formatAssignments(){
+        cursor = 0; //reset cursor
+        while(cursor < content.length()){
+            if(content.charAt(cursor) == '='){
+                //MAKE SURE THIS IS AN ASSIGNMENT AND NOT AN OPERATION
+                if(!(content.charAt(cursor - 1) == '+' || 
+                     content.charAt(cursor - 1) == '-' || 
+                     content.charAt(cursor - 1) == '/' || 
+                     content.charAt(cursor - 1) == '*' || 
+                     content.charAt(cursor - 1) == '%' || 
+                     content.charAt(cursor - 1) == '=' || 
+                     content.charAt(cursor - 1) == '!' || 
+                     content.charAt(cursor - 1) == '<' || 
+                     content.charAt(cursor - 1) == '>')){
+                    //ensure only one space before and after each assignment
+                    //delete all spaces before "=", then add one back
+                    while(Character.isWhitespace(content.charAt(cursor - 1))){
+                        removeBehindCursor();
+                        cursor--;
+                    }
+                    insert(cursor, ' ');
+                    //move past "="
+                    cursor+=2;
+                    //move to next non-whitespace character, repeat above step
+                    while(Character.isWhitespace(content.charAt(cursor))){
+                        cursor++;
+                    }
+                    while(Character.isWhitespace(content.charAt(cursor-1))){
+                        removeBehindCursor();
+                        cursor--;
+                    }
+                    insert(cursor, ' ');
+                    cursor+=2;
+                }
+            }
+            cursor++;
         }
     }
 
