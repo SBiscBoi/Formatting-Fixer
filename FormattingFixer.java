@@ -2,7 +2,7 @@
 OBJECTIVE: Take in an annoyingly formatted .java file, and fix it to my personal style of formatting.
 GOOD FORMATTING RULES:
     DONE 1: Semicolons should touch the end of a statement.  (Good ex. int x = 1;) (Bad ex. int x = 1 ;)
-    2: Beginning Curly Braces should touch the end of the previous statement.  (Good ex. while(x > 1){ ) (Bad ex. while(x > 1) \n { )
+    DONE 2: Beginning Curly Braces should touch the end of the previous statement.  (Good ex. while(x > 1){ ) (Bad ex. while(x > 1) \n { )
     3: Beginning paranthesis should touch the end of the previous statement.  (Good ex. if(x > 1) ) (Bad ex. if (x > 1) )
     4: The first character inside paranthesis should be touching the first parenthesis.  (Good ex. (x > 1) ) (Bad ex. ( x > 1 ) )
     5: The last character inside paranthesis should be touching the last parenthesis.  (Good ex. (x > 1) ) (Bad ex. ( x > 1 ) )
@@ -56,6 +56,7 @@ class FileFormatter{
     public void formatFull(){
         formatSemicolons();
         formatCurlyBraces();
+        formatParenthesis();
     }
 
     //fix semicolon formatting
@@ -73,7 +74,6 @@ class FileFormatter{
         }
     }
 
-    //*FIXME*
     //fix curly brace formatting
     //made public to give the option of only formatting curly braces
     public void formatCurlyBraces(){
@@ -189,6 +189,19 @@ class FileFormatter{
         content = tempContent;
     }
     
+    public void formatParenthesis(){
+        //First, align opening parenthesis with the last non-whitespace character
+        cursor = 0; //reset cursor
+        while(cursor < content.length()){
+            if(content.charAt(cursor) == '('){
+                while(Character.isWhitespace(content.charAt(cursor - 1))){
+                    removeBehindCursor();
+                }
+            }
+            cursor++; //onward
+        }
+    }
+
     //remove one chracter to the left of the cursor/current positon
     private void removeBehindCursor() { content = content.substring(0, cursor - 1) + content.substring(cursor); } 
 
