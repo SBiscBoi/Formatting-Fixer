@@ -1,6 +1,5 @@
 public class BadFormattingExample
 {
-
   public static void main ( String[] args )  
   {
     int[][] data = { {3, 2, 5},

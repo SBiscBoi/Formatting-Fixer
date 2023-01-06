@@ -13,17 +13,19 @@ GOOD FORMATTING RULES:
 */
 
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
 public class FormattingFixer{
     public static void main(String[] args){
-        FileFormatter formatter = new FileFormatter("BadFormattingExample.java");
+        FileFormatter formatter = new FileFormatter("BadFormattingExample.java"); //input filepath here
         
-        formatter.format(); //preform a full format
+        formatter.format(); //preform format
 
-        System.out.println(formatter.getCurrentContent());
-        //formatter.printWhitespace();
+        //System.out.println(formatter.getCurrentContent()); //print file content pre-write
+        
+        formatter.writeFormattedFile("GoodFormattedExample.java"); //write to new file
    }
 }
 
@@ -60,8 +62,17 @@ class FileFormatter{
         formatAssignments();
     }
 
-    //fix semicolon formatting
-    //made public to give the option of only formatting semicolons
+    public void writeFormattedFile(String fileName){
+        try {
+            FileWriter writer = new FileWriter(fileName);
+            writer.write(content);
+            writer.close();
+        } catch(IOException e){
+            e.printStackTrace();
+            System.out.println(getCurrentContent());
+        }
+    }
+
     private void formatSemicolons(){
         cursor = 0; //reset cursor
         while(cursor < content.length()){ //run through whole file
@@ -75,8 +86,6 @@ class FileFormatter{
         }
     }
 
-    //fix curly brace formatting
-    //made public to give the option of only formatting curly braces
     private void formatCurlyBraces(){
         byte tabCount = 0; //keep track of how many tabs are needed for everything before the closing braces
 
@@ -268,15 +277,4 @@ class FileFormatter{
 
     //insert a specified character into the file content at a specifed position
     private void insert(int index, char character) { content = content.substring(0, index) + character + content.substring(index); }
-
-    //debug
-    public void printWhitespace(){
-        cursor = 0;
-        while(cursor < content.length()){ //run through whole file
-            if(Character.isWhitespace(content.charAt(cursor))){
-                System.out.println("Location: " + cursor + " Value: " + (int)content.charAt(cursor));
-            }
-            cursor++; //move to next character
-        }
-    }
 }
