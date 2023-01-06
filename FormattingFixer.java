@@ -27,8 +27,21 @@ public class FormattingFixer{
         } catch(IOException e){
             e.printStackTrace();
         }
-      
-      
+
+        //Step 1: Fix semicolons
+        int cursor = 0; //this will be reset a lot
+        while(cursor < fileContent.length()){ //run through whole file
+            if(fileContent.charAt(cursor) == ';'){
+                System.out.println("\";\" found at " + cursor);
+                while(fileContent.charAt(cursor-1) == ' '){
+                    System.out.println("Space removed");
+                    fileContent = fileContent.substring(0, cursor - 1) + fileContent.substring(cursor);
+                    cursor--; //go back a spot to get rid of more spaces if there is any
+                }
+            }
+            cursor++;
+        }
+            
         System.out.println(fileContent);
    }
 }
