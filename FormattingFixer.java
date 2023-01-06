@@ -176,7 +176,7 @@ class FileFormatter{
                     line = "    " + line;
                 }
 
-                if(!(new StringBuilder(line).isEmpty())){
+                if(new StringBuffer(line).length() != 0){
                     if(line.charAt(line.length() - 1) == '{'){
                         tabsToKeep++;
                     }
