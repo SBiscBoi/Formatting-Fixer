@@ -14,34 +14,56 @@ import java.io.IOException;
 
 public class FormattingFixer{
     public static void main(String[] args){
-        String fileContent = ""; //content of the file
+        FileFormatter formatter = new FileFormatter("BadFormattingExample.java");
+        
+        formatter.formatFull(); //preform a full format
+
+        System.out.println(formatter.getCurrentContent());
+   }
+}
+
+class FileFormatter{
+    //PIV's
+    int cursor = 0; //position in the file/string, used to evaluate the current character
+    String content = ""; //content of the file, stored as 1 string.
+
+    //Constructors
+    public FileFormatter(String filePath){ //takes in the path of a java file to format
         try{
-            FileReader reader = new FileReader("BadFormattingExample.java"); //INPUT FILE HERE
+            FileReader reader = new FileReader(filePath);
          
             //append each character to the content string
             int character;
             while((character = reader.read()) != -1){
-                fileContent += (char)character;
+                content += (char)character;
         }
         reader.close();
         } catch(IOException e){
             e.printStackTrace();
+            System.exit(-1); //end execution, file could not be read.
         }
+    }
 
-        //Step 1: Fix semicolons
-        int cursor = 0; //this will be reset a lot
-        while(cursor < fileContent.length()){ //run through whole file
-            if(fileContent.charAt(cursor) == ';'){
-                System.out.println("\";\" found at " + cursor);
-                while(fileContent.charAt(cursor-1) == ' '){
-                    System.out.println("Space removed");
-                    fileContent = fileContent.substring(0, cursor - 1) + fileContent.substring(cursor);
-                    cursor--; //go back a spot to get rid of more spaces if there is any
+    //Methods
+    public String getCurrentContent() { return content; } //Return the current content of the file being formatted
+
+    //preform a full format of the file, calling all formatting method
+    public void formatFull(){
+        formatSemicolons();
+    }
+
+    //fix semicolon formatting
+    //made public to give the option of only formatting semicolons
+    public void formatSemicolons(){
+        cursor = 0; //reset cursor
+        while(cursor < content.length()){ //run through whole file
+            if(content.charAt(cursor) == ';'){ //if semicolon found...
+                while(content.charAt(cursor-1) == ' '){
+                    content = content.substring(0, cursor - 1) + content.substring(cursor); //split string to before the space, then append everything after the space to essentially take the space out.
+                    cursor--; //go back a spot to get rid of more spaces if more are left
                 }
             }
-            cursor++;
+            cursor++; //move to next character
         }
-            
-        System.out.println(fileContent);
-   }
+    }
 }
